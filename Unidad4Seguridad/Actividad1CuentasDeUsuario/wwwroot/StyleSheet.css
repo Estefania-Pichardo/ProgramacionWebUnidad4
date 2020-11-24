@@ -1,0 +1,146 @@
+﻿html, body {
+    background-color: #35012c;
+    height: 100%;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+header {
+    width: 90%;
+    padding:10px;
+    margin:auto;
+}
+
+    header h1 {
+        margin: auto;
+        color:white;
+        text-align:center;
+    }
+
+    main h2{
+        width:90%;
+        margin:10px auto;
+        text-align:center;
+        color:white;
+        padding:5px;
+    }
+
+
+.formulario {
+    width: 50%;
+    margin: auto;
+    background-color: white;
+    border-radius: 10px;
+    padding: 50px 20px;
+    margin-bottom: 20px;
+    /*height:400px;*/
+}
+
+    .formulario form label {
+        display: block;
+        /*width:250px;*/
+        margin: 10px;
+        text-align: center;
+    }
+
+    .formulario form input[type=email], .formulario form input[type=password] {
+        display: block;
+        margin: auto;
+        width: 80%;
+        padding: 5px;
+    }
+
+    .formulario .RecordarDatos {
+        float: left;
+        display: block;
+        margin-left: 10%;
+    }
+
+    .formulario #etiquetaRecordar {
+        text-align: left;
+        display: inline;
+    }
+
+    .formulario #terminos, .formulario #olvide {
+        display: block;
+        width: 80%;
+        margin-left: 10%;
+        text-align: left;
+    }
+
+    .formulario form input[type=submit], .formulario #CrearCuenta {
+        display: block;
+        background-color: #89043D;
+        width: 80%;
+        padding: 5px;
+        margin: auto;
+        color: white;
+        font-size: medium;
+    }
+
+    .formulario .crear, .formulario #sesion {
+        text-align: center;
+    }
+
+#cuenta {
+    padding: 20px;
+    width: 60%;
+}
+
+/*Empieza codigo de la pagina crear cuenta*/
+.formulario h4 {
+    margin: 0;
+}
+
+.formulario fieldset {
+    margin: 20px;
+    padding: 10px;
+}
+
+    .formulario fieldset legend, .Invitado fieldset legend {
+        font-weight: bolder;
+        color: #35012C;
+    }
+
+    .formulario fieldset label, i {
+        display: block;
+        float: left;
+        width: 35%;
+        margin-left: 10%;
+        font-weight: 500;
+    }
+
+    .formulario fieldset input, .formulario fieldset select {
+        display: block;
+        margin-bottom: 5px;
+        width: 50%;
+    }
+
+    .formulario fieldset i {
+        width: initial;
+        color: darkred;
+    }
+
+.formulario #CrearCuenta {
+    width: 95%;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.formulario .InfoPago {
+    display: block;
+    width: 90%;
+    float: none;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+    footer{
+        font-size:small;
+        margin: auto;
+        width:80%;
+        font-weight:bold;
+
+    }
