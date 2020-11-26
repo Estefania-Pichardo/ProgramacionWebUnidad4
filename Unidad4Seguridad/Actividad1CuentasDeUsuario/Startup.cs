@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,7 +18,19 @@ namespace Actividad1CuentasDeUsuario
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+               options =>
+               {
+                   options.LoginPath = "/Home/IniciarSesion";
+                   options.LogoutPath = "/Home/CerrarSesion";
+                    //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
+                    options.AccessDeniedPath = "/Home/Index";
+                   options.Cookie.Name = "Control de cuentas de usuario";
+               });
             services.AddMvc();
+            //services.AddDbContext<Models.controlusuariosContext>(
+            //   options => options.UseMySql("server=localhost;user=root;password=root;database=controlusuarios", x => x.ServerVersion("5.7.18-mysql"))
+            //);
         }
 
         public IWebHostEnvironment Environment { get; set; }
@@ -30,9 +44,12 @@ namespace Actividad1CuentasDeUsuario
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
             app.UseFileServer();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,0 +1,31 @@
+﻿@model Actividad1CuentasDeUsuario.Models.Usuario
+@{
+    Layout = "_Layout";
+}
+
+<h2>Crea una cuenta</h2>
+<form method="post" action="~/Home/Registrar" class="formulario" id="cuenta">
+    <h4>Llena los campos con tus datos</h4>
+    <fieldset>
+        <legend>Datos Personales</legend>
+
+        <label>Nombre:</label>
+        <input type="text" required name="NombreUsuario" /><br />
+        <label>Correo Electonico:</label>
+        <input type="email" required name="Correo" /><br />
+        <label>Contraseña:</label>
+        <input type="password" name="Contraseña" /><br />
+        <label>Confirma tu contraseña:</label>
+        <input type="password" required />
+
+
+    </fieldset>
+
+    <label>@Html.ValidationSummary()</label>
+    <input type="submit" id="CrearCuenta" value="Registrarme" />
+    <input type="checkbox" id="ckcNotif" /><label for="ckcNotif">Deseo recibir notificaciones y ofertas por correo electronico</label>
+    <p id="sesion">
+        Ya tienes una cuenta?<br />
+        <a href="IniciarSesion">Inicia sesión aqui</a>
+    </p>
+</form>

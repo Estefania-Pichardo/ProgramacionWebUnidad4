@@ -1,52 +1,15 @@
 ﻿
 @{
     Layout = "_Layout";
+
 }
+<h2>Bienvenido al portal, selecciona que deseas hacer a continuación</h2>
 
-<h2>Crea una cuenta</h2>
-<form method="post" action="~/Home/Registrar" class="formulario" id="cuenta">
-    <h4>Llena los campos con tus datos</h4>
-    <fieldset>
-        <legend>Datos Personales</legend>
-
-        <label>Nombre:</label>
-        <input type="text" /><br />
-        <label>Apellidos:</label>
-        <input type="text" /><br />
-        <label>Correo Electonico:</label>
-        <input type="email"  name="email"/><br />
-        <label>Contraseña:</label>
-        <input type="password" /><br />
-        <label>Confirma tu contraseña:</label>
-        <input type="password" required />
-
-
-    </fieldset>
-
-    <input type="submit" id="CrearCuenta" value="Registrarme" />
-    <input type="checkbox" id="ckcNotif" /><label for="ckcNotif">Deseo recibir notificaciones y ofertas por correo electronico</label>
-    <p id="sesion">
-        Ya tienes una cuenta?<br />
-        <a href="Home/IniciarSesion">Inicia sesión aqui</a>
-    </p>
-</form>
-@*<h2>Registrate</h2>
-<div>
-    <form>
-        <label>Usuario:</label>
-        <br />
-        <input type="text" required /><br />
-        <label>Correo electrónico:</label><br />
-        <input type="email" />
-        <br />
-        <label>Contraseña:</label>
-        <br />
-        <input type="password" required /><br />
-        <label>Confirma tu contraseña:</label>
-        <br />
-        <input type="password" required />
-        <input type="submit" value="Registrarme" />
-    </form>
-    <p>Ya tienes una cuenta? <a href="Home/IniciarSesion">Inicia sesión aqui</a></p>
-</div>*@
-
+<div class="formulario">
+    <a href="~/Home/IniciarSesion">
+        <input type="button" value="Iniciar Sesion"/>
+    </a>
+    <a href="~/Home/Registrar">
+        <input type="button" value="Registrarme" />
+    </a>
+</div>

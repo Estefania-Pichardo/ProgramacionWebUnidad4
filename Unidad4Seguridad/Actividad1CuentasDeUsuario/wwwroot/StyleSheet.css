@@ -27,6 +27,8 @@ header {
     }
 
 
+
+
 .formulario {
     width: 50%;
     margin: auto;
@@ -36,6 +38,21 @@ header {
     margin-bottom: 20px;
     /*height:400px;*/
 }
+.formulario a{
+    display:block;
+    width:80%;
+    background-color:#89043D;
+    color:white;
+    font-weight:bold;
+    margin:10px auto;
+}
+    .formulario a input[type=button] {
+        width: 100%;
+        background: #89043D;
+        color: white;
+        font-weight: bold;
+        padding: 20px;
+    }
 
     .formulario form label {
         display: block;
@@ -88,7 +105,6 @@ header {
     width: 60%;
 }
 
-/*Empieza codigo de la pagina crear cuenta*/
 .formulario h4 {
     margin: 0;
 }
@@ -137,10 +153,15 @@ header {
     margin-bottom: 5px;
 }
 
-    footer{
-        font-size:small;
+    footer{      
         margin: auto;
-        width:80%;
-        font-weight:bold;
-
+        width:100%;
+        
     }
+        footer>p {
+            font-size: small;
+            font-weight: bold;
+            color: white;
+            text-align:center;
+            padding:5px;
+        }

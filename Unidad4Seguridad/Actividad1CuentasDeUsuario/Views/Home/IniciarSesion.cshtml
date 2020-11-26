@@ -1,15 +1,15 @@
-﻿
+﻿@model Actividad1CuentasDeUsuario.Models.Usuario
 @{
     Layout = "_Layout";
 }
 
 <h2>Inicia sesión</h2>
 <section class="formulario">
-    <form>
+    <form method="post" action="~/Home/IniciarSesion">
         <label>Correo Electónico:</label>
-        <input type="email" /><br />
+        <input type="email"  name="Correo"/><br />
         <label>Contraseña:</label>
-        <input type="password" /><br />
+        <input type="password" name="Contraseña"/><br />
 
 
         <input type="submit" value="Entrar" /><br />
@@ -22,7 +22,7 @@
         </label>
     </form>
     <div class="crear">
-        <p>Aun no tienes una cuenta? <a href="Index">Crea una aqui</a></p>
+        <p>Aun no tienes una cuenta? <a href="Registrar">Crea una aqui</a></p>
         <p>Olvidaste tu contraseña? <a href="RecuperarContraseña">Haz click aqui para recuperarla</a></p>
     </div>
 </section>
