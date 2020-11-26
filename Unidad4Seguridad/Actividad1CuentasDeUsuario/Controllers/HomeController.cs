@@ -41,32 +41,51 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Registrar(Usuario u)
+        public IActionResult Registrar(Usuario u, string contraseña1, string contraseña2)
         {
-
-            //Esto es para enviar el correo
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress("noreply@sistemas171.com","Cuenta automatizada de Sistemas171");
-            message.To.Add(u.Correo);
-            message.Subject = "Prueba de email";
-
-            //Leo el documento html para enviarlo
-            string mensaje = System.IO.File.ReadAllText(Environment.WebRootPath + "/Correo.html");
-            message.IsBodyHtml = true;
-            message.Body = mensaje;
-
-            SmtpClient client = new SmtpClient("mail.sistemas171.com",2525);
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
-            client.Send(message);
-
+            controlusuariosContext Context = new controlusuariosContext();
             //Para agregar el usuario a la base de datos
             try
             {
-                controlusuariosContext Context = new controlusuariosContext();
-                Repository<Usuario> repos = new Repository<Usuario>(Context);
-                repos.Insert(u);
-                return RedirectToAction("Espere");
+                //Revisar que no exista una cuenta con ese correo
+                if (Context.Usuarios.Any(x => x.Correo == u.Correo))
+                {
+                    ModelState.AddModelError("", "Ya existe una cuenta registrada con este correo");
+                    return View(u);
+                }
+                else
+                {
+                    if (contraseña1 == contraseña2)
+                    {
+                        Repository<Usuario> repos = new Repository<Usuario>(Context);
+                        u.Contraseña = HashingHelpers.GetHash(contraseña1);
+                        repos.Insert(u);
+
+                        //Esto es para enviar el correo
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress("noreply@sistemas171.com", "Cuenta automatizada de Sistemas171");
+                        message.To.Add(u.Correo);
+                        message.Subject = "Confirma tu correo";
+
+                        //Leo el documento html para enviarlo
+                        string mensaje = System.IO.File.ReadAllText(Environment.WebRootPath + "/Correo.html");
+                        message.IsBodyHtml = true;
+                        message.Body = mensaje;
+
+                        SmtpClient client = new SmtpClient("mail.sistemas171.com", 2525);
+                        client.UseDefaultCredentials = false;
+                        client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
+                        client.Send(message);
+
+                        return RedirectToAction("IniciarSesion");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Las contraseñas no coinciden");
+                        return View(u);
+                    }
+                }
+              
             }
             catch (Exception ex)
             {
@@ -74,14 +93,15 @@ namespace Actividad1CuentasDeUsuario.Controllers
                 return View(u);
             }
 
+
             
         }
 
-        [AllowAnonymous]
-        public IActionResult Espere()
-        {
-            return View();
-        }
+        //[AllowAnonymous]
+        //public IActionResult Espere()
+        //{
+        //    return View();
+        //}
         [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
@@ -93,10 +113,12 @@ namespace Actividad1CuentasDeUsuario.Controllers
         public async Task<IActionResult> IniciarSesion(Usuario u)
         {
             controlusuariosContext Context = new controlusuariosContext();
+
             Repository<Usuario> repos = new Repository<Usuario>(Context);
+
             var usuario = Context.Usuarios.FirstOrDefault(x => x.Correo == u.Correo);
 
-            if (usuario != null && u.Contraseña == usuario.Contraseña)
+            if (usuario != null && HashingHelpers.GetHash(u.Contraseña) == usuario.Contraseña)
             {
                 List<Claim> informacion = new List<Claim>();
 

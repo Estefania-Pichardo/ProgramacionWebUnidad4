@@ -38,7 +38,7 @@ namespace Actividad1CuentasDeUsuario.Repositories
 
         public bool Validar(T entidad)
         {
-
+            
             return true;
         }
     }

@@ -1,4 +1,5 @@
 ﻿@model Actividad1CuentasDeUsuario.Models.Usuario
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
 }
@@ -7,9 +8,9 @@
 <section class="formulario">
     <form method="post" action="~/Home/IniciarSesion">
         <label>Correo Electónico:</label>
-        <input type="email"  name="Correo"/><br />
+        <input type="email" asp-for="Correo" required/><br />
         <label>Contraseña:</label>
-        <input type="password" name="Contraseña"/><br />
+        <input type="password" asp-for="Contraseña" required/><br />
 
 
         <input type="submit" value="Entrar" /><br />
@@ -20,21 +21,11 @@
             <a href="">Terminos y condiciones</a>
             y el <a href="">Aviso de privacidad</a> de Music+
         </label>
+        @Html.ValidationSummary()
     </form>
     <div class="crear">
         <p>Aun no tienes una cuenta? <a href="Registrar">Crea una aqui</a></p>
         <p>Olvidaste tu contraseña? <a href="RecuperarContraseña">Haz click aqui para recuperarla</a></p>
     </div>
 </section>
-@*<h2>Inicio de sesión</h2>
-<div>
-    <form>
-        <label>Correo electrónico:</label>
-        <input type="email" required /><br />
-        <label>Contraseña:</label>
-        <input type="password" required /><br />
-        <input type="submit" value="Iniciar Sesión" />
-    </form>
-    <p>Aun no tienes una cuenta? <a href="Index">Crea una aqui</a></p>
-    <p>Olvidaste tu contraseña? <a href="RecuperarContraseña">Haz click aqui para recuperarla</a></p>
-</div>*@
+

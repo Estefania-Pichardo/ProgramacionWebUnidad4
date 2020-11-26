@@ -29,7 +29,7 @@ header {
 
 
 
-.formulario {
+.formulario, .contenedor {
     width: 50%;
     margin: auto;
     background-color: white;
@@ -38,21 +38,21 @@ header {
     margin-bottom: 20px;
     /*height:400px;*/
 }
-.formulario a{
-    display:block;
-    width:80%;
-    background-color:#89043D;
-    color:white;
-    font-weight:bold;
-    margin:10px auto;
-}
-    .formulario a input[type=button] {
-        width: 100%;
-        background: #89043D;
+    .contenedor a {
+        display: block;
+        width: 80%;
+        background-color: #89043D;
         color: white;
         font-weight: bold;
-        padding: 20px;
+        margin: 10px auto;
     }
+        .contenedor a input[type=button] {
+            width: 100%;
+            background: #89043D;
+            color: white;
+            font-weight: bold;
+            padding: 20px;
+        }
 
     .formulario form label {
         display: block;

@@ -1,4 +1,5 @@
 ﻿@model Actividad1CuentasDeUsuario.Models.Usuario
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
 }
@@ -10,13 +11,13 @@
         <legend>Datos Personales</legend>
 
         <label>Nombre:</label>
-        <input type="text" required name="NombreUsuario" /><br />
+        <input type="text" required asp-for="NombreUsuario" /><br />
         <label>Correo Electonico:</label>
-        <input type="email" required name="Correo" /><br />
+        <input type="email" required asp-for="Correo" /><br />
         <label>Contraseña:</label>
-        <input type="password" name="Contraseña" /><br />
+        <input type="password" asp-for="Contraseña" name="Contraseña1"  required/><br />
         <label>Confirma tu contraseña:</label>
-        <input type="password" required />
+        <input type="password" name="Contraseña2" required />
 
 
     </fieldset>

@@ -25,12 +25,9 @@ namespace Actividad1CuentasDeUsuario
                    options.LogoutPath = "/Home/CerrarSesion";
                     //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
                     options.AccessDeniedPath = "/Home/Index";
-                   options.Cookie.Name = "Control de cuentas de usuario";
+                   options.Cookie.Name = "ControlUsuarios";
                });
             services.AddMvc();
-            //services.AddDbContext<Models.controlusuariosContext>(
-            //   options => options.UseMySql("server=localhost;user=root;password=root;database=controlusuarios", x => x.ServerVersion("5.7.18-mysql"))
-            //);
         }
 
         public IWebHostEnvironment Environment { get; set; }
