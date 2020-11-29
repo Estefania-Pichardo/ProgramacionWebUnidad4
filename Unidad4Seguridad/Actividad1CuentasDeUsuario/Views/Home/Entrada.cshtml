@@ -5,10 +5,18 @@
 
 <h2>Entrada al potal</h2>
 
-<section style="background-color:white">
-
+<section class="contenedor">
     <h3>Programación web Unidad 4</h3>
     <h4>Estefania Pichardo Montes</h4>
+
+    <p>Usuario conectado: @User.Claims.FirstOrDefault(x => x.Type == "Nombre Completo").Value</p>
+
+    <a href="~/Home/CambiarContraseña">
+        <input type="button" value="CambiarContraseña" />
+    </a>
+    <a href="~/Home/CerrarSesion">
+        <input type="button" value="Cerrar sesion" />
+    </a>
 </section>
 
 

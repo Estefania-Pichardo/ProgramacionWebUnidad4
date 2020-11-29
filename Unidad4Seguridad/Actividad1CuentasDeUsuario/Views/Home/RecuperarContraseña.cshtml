@@ -6,10 +6,11 @@
 <h2>Recuperar contraseña</h2>
 
 <section class="formulario">
-    <form>
+    <form method="post" action="~/Home/RecuperarContraseña">
         <label>Email:</label>
-        <input type="email" required /><br />
+        <input type="email" required name="correo"/><br />
         <input type="submit" value="Recuperar Contraseña" />
+        @Html.ValidationSummary()
         <p>Te enviaremos un correo electronico con una contraseña temporal para iniciar sesión</p>
     </form>
 </section>

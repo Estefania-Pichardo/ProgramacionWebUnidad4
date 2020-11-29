@@ -1,0 +1,21 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+<h2>ActivarCuenta</h2>
+
+<section class="formulario">
+    <p>
+        Se envio un correo electronico a la direccion que registraste con un codigo de confirmacion de cuenta, porfavor,
+        ingresa el codigo aqui
+    </p>
+    <form method="post" action="~/Home/ActivarCuenta">
+        <label>Código:</label>
+        <input type="number" required name="codigo" style="display:block; width:80%;"/><br />
+        <input type="submit" value="Activa mi cuenta" />
+    </form>
+
+
+</section>
+

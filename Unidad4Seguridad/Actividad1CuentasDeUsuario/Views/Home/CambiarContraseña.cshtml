@@ -1,4 +1,5 @@
-﻿
+﻿@*@model Actividad1CuentasDeUsuario.Models.Usuario
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers*@
 @{
     Layout = "_Layout";
 }
@@ -7,13 +8,21 @@
 <h2>Cambiar contraseña</h2>
 
 <section class="formulario">
-    <form>
+    <form method="post" action="~/Home/CambiarContraseña" onsubmit="submit()">
+        <input type="text" style="visibility:hidden" name="correo" value="@User.Claims.FirstOrDefault(x => x.Type == "Correo electronico").Value"/>
         <label>Contraseña nueva:</label>
-        <input type="password" required /><br />
+        <input type="password" name="contraseñaNueva1" required /><br />
         <label>Confirma tu nueva contraseña:</label>
-        <input type="password" required /><br />
+        <input type="password" required  name="contraseñaNueva2"/><br />
+        @Html.ValidationSummary()
         <input type="submit" value="Cambiar Contraseña" />
+        
     </form>
+
 </section>
 
-
+<script>
+    function submit(){
+        alert('La contraseña se cambio exitosamente');
+    }
+</script>

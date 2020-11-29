@@ -48,7 +48,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
             try
             {
                 //Revisar que no exista una cuenta con ese correo
-                if (Context.Usuarios.Any(x => x.Correo == u.Correo))
+                if (Context.Usuario.Any(x => x.Correo == u.Correo))
                 {
                     ModelState.AddModelError("", "Ya existe una cuenta registrada con este correo");
                     return View(u);
@@ -59,25 +59,27 @@ namespace Actividad1CuentasDeUsuario.Controllers
                     {
                         Repository<Usuario> repos = new Repository<Usuario>(Context);
                         u.Contraseña = HashingHelpers.GetHash(contraseña1);
+                        u.Codigo = CodigoHelper.GetCodigo();
+                        u.Activo = 0;
                         repos.Insert(u);
 
                         //Esto es para enviar el correo
                         MailMessage message = new MailMessage();
-                        message.From = new MailAddress("noreply@sistemas171.com", "Cuenta automatizada de Sistemas171");
+                        message.From = new MailAddress("noreply@sistemas171.com", "Music+");
                         message.To.Add(u.Correo);
                         message.Subject = "Confirma tu correo";
 
                         //Leo el documento html para enviarlo
                         string mensaje = System.IO.File.ReadAllText(Environment.WebRootPath + "/Correo.html");
                         message.IsBodyHtml = true;
-                        message.Body = mensaje;
+                        message.Body = $"{mensaje} <h3>{u.Codigo}</h3>";
 
                         SmtpClient client = new SmtpClient("mail.sistemas171.com", 2525);
                         client.UseDefaultCredentials = false;
                         client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
                         client.Send(message);
 
-                        return RedirectToAction("IniciarSesion");
+                        return RedirectToAction("ActivarCuenta");
                     }
                     else
                     {
@@ -85,7 +87,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
                         return View(u);
                     }
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -94,14 +96,21 @@ namespace Actividad1CuentasDeUsuario.Controllers
             }
 
 
-            
+
         }
 
-        //[AllowAnonymous]
-        //public IActionResult Espere()
-        //{
-        //    return View();
-        //}
+        [AllowAnonymous]
+        public IActionResult ActivarCuenta()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult ActivarCuenta(string codigo)
+        {
+            return View();
+        }
+
         [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
@@ -116,7 +125,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
             Repository<Usuario> repos = new Repository<Usuario>(Context);
 
-            var usuario = Context.Usuarios.FirstOrDefault(x => x.Correo == u.Correo);
+            var usuario = Context.Usuario.FirstOrDefault(x => x.Correo == u.Correo);
 
             if (usuario != null && HashingHelpers.GetHash(u.Contraseña) == usuario.Contraseña)
             {
@@ -124,6 +133,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
                 informacion.Add(new Claim(ClaimTypes.Name, "Usuario" + usuario.NombreUsuario));
                 informacion.Add(new Claim("Correo electronico", usuario.Correo));
+                informacion.Add(new Claim("Nombre Completo", usuario.NombreUsuario));
                 informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
 
                 //Hay que instanciar un claims principal al que se le asigna un claims identity
@@ -140,9 +150,9 @@ namespace Actividad1CuentasDeUsuario.Controllers
                 ModelState.AddModelError("", "El usuario o la contraseña son incorrectas");
                 return View();
             }
-            
 
-            
+
+
         }
 
         [Authorize]
@@ -151,10 +161,101 @@ namespace Actividad1CuentasDeUsuario.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize]
+        public IActionResult CambiarContraseña(string contraseñaNueva1, string correo, string contraseñaNueva2)
+        {
+            controlusuariosContext Context = new controlusuariosContext();
+            Repository<Usuario> repos = new Repository<Usuario>(Context);
+
+            var user = Context.Usuario.FirstOrDefault(x => x.Correo == correo);
+            try
+            {
+                if (contraseñaNueva1 == contraseñaNueva2)
+                {
+                    user.Contraseña = HashingHelpers.GetHash(contraseñaNueva1);
+                    if (user.Contraseña == contraseñaNueva1)
+                    {
+                        ModelState.AddModelError("", "La nueva contraseña no puede ser igual a la ya registrada");
+                        return View(contraseñaNueva1);
+                    }
+                    else
+                    {
+                        repos.Update(user);
+
+                        return RedirectToAction("Entrada");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("","Las contraseñas no coinciden");
+                    return View();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(contraseñaNueva1, contraseñaNueva2);
+            }
+           
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
+        }
+
         [AllowAnonymous]
         public IActionResult RecuperarContraseña()
         {
             return View();
+        }
+        [HttpPost]
+        public IActionResult RecuperarContraseña(string correo)
+        {
+            try
+            {
+                controlusuariosContext Context = new controlusuariosContext();
+                Repository<Usuario> repos = new Repository<Usuario>(Context);
+
+                var user = Context.Usuario.FirstOrDefault(x => x.Correo == correo);
+
+                if (user != null)
+                {
+
+                    var contraseñaTemporal = CodigoHelper.GetCodigo();
+
+                    MailMessage message = new MailMessage();
+                    message.From = new MailAddress("noreply@sistemas171.com", "Music+");
+                    message.To.Add(correo);
+                    message.Subject = "Recupera tu contraseña";
+
+                    message.Body = $"Utiliza esta contraseña temporal para ingresar a tu cuenta, recuerda que una vez que ingreses deberas cambiarla: {contraseñaTemporal} ";
+
+                    SmtpClient client = new SmtpClient("mail.sistemas171.com", 2525);
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
+                    client.Send(message);
+
+                    user.Contraseña = HashingHelpers.GetHash(contraseñaTemporal.ToString());
+                    repos.Update(user);
+                    return RedirectToAction("IniciarSesion");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "El correo no esta registrado");
+                    return View(correo);
+                }
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(correo);
+            }
+           
         }
 
         [Authorize]
