@@ -93,7 +93,6 @@ namespace Actividad1CuentasDeUsuario.Controllers
                         return View(u);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -118,7 +117,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
             UsuarioRepository repos = new UsuarioRepository(context);
             var user = context.Usuario.FirstOrDefault(x=>x.Codigo==codigo);
             
-            if(user!=null)
+            if(user!=null && user.Activo==0)
             {
                 var cod = user.Codigo;
 
