@@ -65,19 +65,25 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
                         //Esto es para enviar el correo
                         MailMessage message = new MailMessage();
-                        message.From = new MailAddress("noreply@sistemas171.com", "Music+");
+                        message.From = new MailAddress("sistemascomputacionales7g@gmail.com", "Music+");
                         message.To.Add(u.Correo);
                         message.Subject = "Confirma tu correo";
 
                         //Leo el documento html para enviarlo
                         string mensaje = System.IO.File.ReadAllText(Environment.WebRootPath + "/Correo.html");
                         message.IsBodyHtml = true;
-                        message.Body = $"{mensaje} <h3>{u.Codigo}</h3>";
+                        message.Body = mensaje.Replace("{##Codigo##}", u.Codigo.ToString());
 
-                        SmtpClient client = new SmtpClient("mail.sistemas171.com", 2525);
+                        SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                        client.EnableSsl = true;
                         client.UseDefaultCredentials = false;
-                        client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
+                        client.Credentials = new NetworkCredential("sistemascomputacionales7g@gmail.com", "sistemas7g");
                         client.Send(message);
+
+
+                        List<Claim> informacion = new List<Claim>();
+                        informacion.Clear();
+                        informacion.Add(new Claim("CorreoActivar", u.Correo));
 
                         return RedirectToAction("ActivarCuenta");
                     }
@@ -106,9 +112,34 @@ namespace Actividad1CuentasDeUsuario.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult ActivarCuenta(string codigo)
+        public IActionResult ActivarCuenta(int codigo)
         {
-            return View();
+            controlusuariosContext context = new controlusuariosContext();
+            UsuarioRepository repos = new UsuarioRepository(context);
+            var user = context.Usuario.FirstOrDefault(x=>x.Codigo==codigo);
+            
+            if(user!=null)
+            {
+                var cod = user.Codigo;
+
+                if(codigo==cod)
+                {
+                    user.Activo = 1;
+                    repos.Update(user);
+                    
+                    return RedirectToAction("IniciarSesion");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "El codigo no coincide");
+                    return View((object)codigo);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "No se encontro el usuario");
+                return View((object)codigo);
+            }
         }
 
         [AllowAnonymous]
@@ -119,36 +150,47 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> IniciarSesion(Usuario u)
+        public async Task<IActionResult> IniciarSesion(Usuario u, bool persistant)
         {
             controlusuariosContext Context = new controlusuariosContext();
 
-            Repository<Usuario> repos = new Repository<Usuario>(Context);
+            UsuarioRepository repos = new UsuarioRepository(Context);
+           // Repository<Usuario> repos = new Repository<Usuario>(Context);
 
-            var usuario = Context.Usuario.FirstOrDefault(x => x.Correo == u.Correo);
+            var usuario = repos.GetUsuarioByCorreo(u.Correo);
 
             if (usuario != null && HashingHelpers.GetHash(u.Contraseña) == usuario.Contraseña)
             {
-                List<Claim> informacion = new List<Claim>();
+                if(usuario.Activo==1)
+                {
+                    List<Claim> informacion = new List<Claim>();
 
-                informacion.Add(new Claim(ClaimTypes.Name, "Usuario" + usuario.NombreUsuario));
-                informacion.Add(new Claim("Correo electronico", usuario.Correo));
-                informacion.Add(new Claim("Nombre Completo", usuario.NombreUsuario));
-                informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
+                    informacion.Add(new Claim(ClaimTypes.Name, "Usuario" + usuario.NombreUsuario));
+                    informacion.Add(new Claim("Correo electronico", usuario.Correo));
+                    informacion.Add(new Claim("Nombre Completo", usuario.NombreUsuario));
+                    informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
 
-                //Hay que instanciar un claims principal al que se le asigna un claims identity
-                var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    //Hay que instanciar un claims principal al que se le asigna un claims identity
+                    var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                    new AuthenticationProperties { IsPersistent = true });
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                    new AuthenticationProperties { IsPersistent = false });
 
-                return RedirectToAction("Entrada");
+
+                    return RedirectToAction("Entrada");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "La cuenta registrada con este correo electronico no esta activa");
+                    return View(u);
+                }
+               
             }
             else
             {
                 ModelState.AddModelError("", "El usuario o la contraseña son incorrectas");
-                return View();
+                return View(u);
             }
 
 
@@ -166,9 +208,10 @@ namespace Actividad1CuentasDeUsuario.Controllers
         public IActionResult CambiarContraseña(string contraseñaNueva1, string correo, string contraseñaNueva2)
         {
             controlusuariosContext Context = new controlusuariosContext();
-            Repository<Usuario> repos = new Repository<Usuario>(Context);
+            UsuarioRepository repos = new UsuarioRepository(Context);
+           //Repository<Usuario> repos = new Repository<Usuario>(Context);
 
-            var user = Context.Usuario.FirstOrDefault(x => x.Correo == correo);
+            var user = repos.GetUsuarioByCorreo(correo);
             try
             {
                 if (contraseñaNueva1 == contraseñaNueva2)
@@ -219,9 +262,10 @@ namespace Actividad1CuentasDeUsuario.Controllers
             try
             {
                 controlusuariosContext Context = new controlusuariosContext();
-                Repository<Usuario> repos = new Repository<Usuario>(Context);
+                UsuarioRepository repos = new UsuarioRepository(Context);
+                //Repository<Usuario> repos = new Repository<Usuario>(Context);
 
-                var user = Context.Usuario.FirstOrDefault(x => x.Correo == correo);
+                var user = repos.GetUsuarioByCorreo(correo);
 
                 if (user != null)
                 {
@@ -229,15 +273,16 @@ namespace Actividad1CuentasDeUsuario.Controllers
                     var contraseñaTemporal = CodigoHelper.GetCodigo();
 
                     MailMessage message = new MailMessage();
-                    message.From = new MailAddress("noreply@sistemas171.com", "Music+");
+                    message.From = new MailAddress("sistemascomputacionales7g@gmail.com", "Music+");
                     message.To.Add(correo);
                     message.Subject = "Recupera tu contraseña";
 
                     message.Body = $"Utiliza esta contraseña temporal para ingresar a tu cuenta, recuerda que una vez que ingreses deberas cambiarla: {contraseñaTemporal} ";
 
-                    SmtpClient client = new SmtpClient("mail.sistemas171.com", 2525);
+                    SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                    client.EnableSsl = true;
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential("noreply@sistemas171.com", "##ITESRC2020");
+                    client.Credentials = new NetworkCredential("sistemascomputacionales7g@gmail.com", "sistemas7g");
                     client.Send(message);
 
                     user.Contraseña = HashingHelpers.GetHash(contraseñaTemporal.ToString());
@@ -247,13 +292,13 @@ namespace Actividad1CuentasDeUsuario.Controllers
                 else
                 {
                     ModelState.AddModelError("", "El correo no esta registrado");
-                    return View(correo);
+                    return View();
                 }
             }
             catch(Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return View(correo);
+                return View((object)correo);
             }
            
         }
@@ -262,6 +307,26 @@ namespace Actividad1CuentasDeUsuario.Controllers
         public IActionResult Entrada()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Eliminar(string correo)
+        {
+            controlusuariosContext Context = new controlusuariosContext();
+
+            UsuarioRepository repos = new UsuarioRepository(Context);
+            var user = repos.GetUsuarioByCorreo(correo);
+
+            if(user!=null)
+            {
+                repos.Delete(user);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Ha ocurrido un error");
+                return View("Entrada");
+            }
+            return RedirectToAction("Index");
         }
     }
 }

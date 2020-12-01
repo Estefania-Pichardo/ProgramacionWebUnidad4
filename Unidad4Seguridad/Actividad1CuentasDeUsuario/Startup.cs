@@ -23,8 +23,8 @@ namespace Actividad1CuentasDeUsuario
                {
                    options.LoginPath = "/Home/IniciarSesion";
                    options.LogoutPath = "/Home/CerrarSesion";
-                    //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
-                    options.AccessDeniedPath = "/Home/Index";
+                   //options.Cookie.Expiration = TimeSpan.FromMinutes(5);
+                   options.AccessDeniedPath = "/Home/Index";
                    options.Cookie.Name = "ControlUsuarios";
                });
             services.AddMvc();

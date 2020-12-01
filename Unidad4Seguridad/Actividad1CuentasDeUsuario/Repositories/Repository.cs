@@ -36,7 +36,13 @@ namespace Actividad1CuentasDeUsuario.Repositories
             }
         }
 
-        public bool Validar(T entidad)
+        public virtual void Delete(T entidad)
+        {
+            Context.Remove<T>(entidad);
+            Context.SaveChanges();
+        }
+
+        public virtual bool Validar(T entidad)
         {
             
             return true;
