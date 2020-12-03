@@ -1,7 +1,16 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
-}
+    Layout = "_Layout";
 
-<h1>Index</h1>
+}
+<h2>Bienvenido al portal, inicia sesion para continuar</h2>
+
+<div class="contenedor">
+    <a href="~/Home/IniciarSesionDirector">
+        <input type="button" value="Iniciar Sesion como director" />
+    </a>
+    <a href="~/Home/IniciarSesionDocente">
+        <input type="button" value="Iniciar sesion como docente" />
+    </a>
+</div>
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,15 @@ namespace Actividad2RolesDeUsuario
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+               options =>
+               {
+                   options.LoginPath = "/Home/Index";
+                   options.LogoutPath = "/Home/CerrarSesion";
+                    //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
+                    options.AccessDeniedPath = "/Home/Index";
+                   options.Cookie.Name = "Act2RolesUsuario";
+               });
             services.AddMvc();
         }
 
@@ -30,10 +40,12 @@ namespace Actividad2RolesDeUsuario
             app.UseRouting();
             app.UseFileServer();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "Director", pattern: "{Director:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
