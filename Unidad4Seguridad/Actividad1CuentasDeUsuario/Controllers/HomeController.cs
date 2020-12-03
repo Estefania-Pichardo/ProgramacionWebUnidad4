@@ -22,10 +22,9 @@ namespace Actividad1CuentasDeUsuario.Controllers
 
         //controlusuariosContext Context;
 
-        public HomeController(IWebHostEnvironment env/*, controlusuariosContext ctx*/)
+        public HomeController(IWebHostEnvironment env)
         {
             Environment = env;
-            //Context = ctx;
         }
         [AllowAnonymous]
         public IActionResult Index()
@@ -43,7 +42,7 @@ namespace Actividad1CuentasDeUsuario.Controllers
         [AllowAnonymous]
         public IActionResult Registrar(Usuario u, string contraseña1, string contraseña2)
         {
-            controlusuariosContext Context = new controlusuariosContext();
+           controlusuariosContext Context = new controlusuariosContext();
             //Para agregar el usuario a la base de datos
             try
             {
@@ -113,9 +112,9 @@ namespace Actividad1CuentasDeUsuario.Controllers
         [AllowAnonymous]
         public IActionResult ActivarCuenta(int codigo)
         {
-            controlusuariosContext context = new controlusuariosContext();
-            UsuarioRepository repos = new UsuarioRepository(context);
-            var user = context.Usuario.FirstOrDefault(x=>x.Codigo==codigo);
+            controlusuariosContext Context = new controlusuariosContext();
+            UsuarioRepository repos = new UsuarioRepository(Context);
+            var user = Context.Usuario.FirstOrDefault(x=>x.Codigo==codigo);
             
             if(user!=null && user.Activo==0)
             {
@@ -154,7 +153,6 @@ namespace Actividad1CuentasDeUsuario.Controllers
             controlusuariosContext Context = new controlusuariosContext();
 
             UsuarioRepository repos = new UsuarioRepository(Context);
-           // Repository<Usuario> repos = new Repository<Usuario>(Context);
 
             var usuario = repos.GetUsuarioByCorreo(u.Correo);
 
@@ -173,10 +171,17 @@ namespace Actividad1CuentasDeUsuario.Controllers
                     var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                    new AuthenticationProperties { IsPersistent = false });
-
-
+                    if(persistant==true)
+                    {
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                        new AuthenticationProperties { IsPersistent = true });
+                    }
+                    else
+                    {
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                        new AuthenticationProperties { IsPersistent = false });
+                    }
+        
                     return RedirectToAction("Entrada");
                 }
                 else
