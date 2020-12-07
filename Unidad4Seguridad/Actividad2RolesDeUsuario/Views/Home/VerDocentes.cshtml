@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Actividad2RolesDeUsuario.Models.Docente>
+@{
+    Layout = "_Layout";
+    int x = 1;
+}
+
+<h1>Lista de Docentes</h1>
+
+<table>
+    <colgroup>
+        <col style="width:50px" />
+        <col style="width:40px" />
+        <col />
+        <col style="width:50%" />
+    </colgroup>
+    <caption>
+        <a href="~/Home/AgregarDocente"><i class="fa fa-plus"></i> Agregar docente</a>
+    </caption>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th colspan="2">Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var maestro in Model)
+        {
+            <tr>
+                <td class="center">@(x++)</td>
+                <td style="width:40px">@maestro.Clave</td>
+                <td>@maestro.Nombre</td>
+                <td class="center">
+                    <a href="~/Home/Editar/@maestro.Id"><i class="fa fa-edit"></i> Editar</a>
+                    <a href="~/Home/Eliminar/@maestro.Id"><i class="fa fa-remove"></i> Eliminar</a>
+                    <a href="~/Home/Imagen/@maestro.Id"><i class="fa fa-image"></i> Ver alumnos</a>
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

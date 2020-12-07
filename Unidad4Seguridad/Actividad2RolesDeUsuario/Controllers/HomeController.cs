@@ -20,7 +20,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             return View();
         }
 
-                
+
         [AllowAnonymous]
         public IActionResult IniciarSesionDirector()
         {
@@ -33,7 +33,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             rolesusuarioContext context = new rolesusuarioContext();
             Repository<Director> repos = new Repository<Director>(context);
 
-            var director = context.Director.FirstOrDefault(x=>x.Clave==d.Clave);
+            var director = context.Director.FirstOrDefault(x => x.Clave == d.Clave);
 
             try
             {
@@ -45,7 +45,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                     informacion.Add(new Claim("Clave", director.Clave.ToString()));
                     informacion.Add(new Claim(ClaimTypes.Role, "Director"));
                     informacion.Add(new Claim("Nombre Completo", director.Nombre));
-                    informacion.Add(new Claim("Fecha Ingreso",  DateTime.Now.ToString()));
+                    informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
 
                     var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -80,11 +80,11 @@ namespace Actividad2RolesDeUsuario.Controllers
             rolesusuarioContext context = new rolesusuarioContext();
             DocentesRepository repos = new DocentesRepository(context);
 
-            var docente =repos.GetDocenteByClave(d.Clave);
+            var docente = repos.GetDocenteByClave(d.Clave);
 
             try
             {
-                if (docente != null && docente.Contraseña == d.Contraseña && docente.Activo == 1)
+                if (docente != null && docente.Contraseña == HashingHelpers.GetHash(d.Contraseña) && docente.Activo == 1)
                 {
                     List<Claim> informacion = new List<Claim>();
 
@@ -100,7 +100,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
                     new AuthenticationProperties { IsPersistent = true });
 
-                    return RedirectToAction("Principal",docente.Clave);
+                    return RedirectToAction("Principal", docente.Clave);
                 }
                 else
                 {
@@ -108,14 +108,14 @@ namespace Actividad2RolesDeUsuario.Controllers
                     return View(d);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
                 return View(d);
             }
         }
 
-        [Authorize(Roles ="Docente, Director")]
+        [Authorize(Roles = "Docente, Director")]
         public IActionResult Principal(int clave)
         {
 
@@ -129,6 +129,51 @@ namespace Actividad2RolesDeUsuario.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Director")]
+        public IActionResult VerDocentes()
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var listaDocentes = repos.GetAll();
+
+            return View(listaDocentes);
+        }
+
+        [Authorize(Roles = "Director")]
+        public IActionResult AgregarDocente()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Director")]
+        [HttpPost]
+        public IActionResult AgregarDocente(Docente d)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            try
+            {
+                var existe = repos.GetDocenteByClave(d.Clave);
+                if (existe!=null)
+                {
+                    ModelState.AddModelError("", "El docente ya se encuentra registrado");
+                    return View(d);
+                }
+                else
+                {
+                    d.Activo = 1;
+                    d.Contraseña = HashingHelpers.GetHash(d.Contraseña);
+                    repos.Insert(d);
+                    return RedirectToAction("VerDocentes");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(d);
+            }
+
+        }
 
     }
 }
