@@ -1,20 +1,21 @@
 ﻿@model Actividad2RolesDeUsuario.Models.Director
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
 @{
     Layout = "_Layout";
 }
-<h2>Inicia sesión director</h2>
+
+<h2>Inicia sesión docente</h2>
 <section class="formulario">
-    <form method="post" action="~/Home/IniciarSesion">
+    <form method="post" action="~/Home/IniciarSesionDirector">
         <label>Clave:</label>
         <input type="number" asp-for="Clave" required /><br />
         <label>Contraseña:</label>
         <input type="password" asp-for="Contraseña" required /><br />
-
 
         <input type="submit" value="Entrar" /><br />
 
         @Html.ValidationSummary()
     </form>
 </section>
+
+

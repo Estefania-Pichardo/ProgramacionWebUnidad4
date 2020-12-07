@@ -14,6 +14,10 @@ namespace Actividad2RolesDeUsuario.Repositories
         {
             Context = ctx;
         }
+        public virtual IEnumerable<T> GetAll()
+        {
+            return Context.Set<T>();
+        }
         public T Get(object id)
         {
             return Context.Find<T>(id);

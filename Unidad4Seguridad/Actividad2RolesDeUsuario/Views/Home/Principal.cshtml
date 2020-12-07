@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@if (User.IsInRole("Director"))
+{
+    <div class="contenedor">
+        <form>
+            <h3>¡Bienvenido director @User.Claims.FirstOrDefault(x => x.Type == "Nombre Completo").Value!</h3>
+
+            <a href="~/Home/ListaMaestros">
+                <input type="button" value=" Ver lista de docentes" />
+            </a>
+
+            <a href="#" class="botonesEntrada">
+                <input type="button" value="Ver lista de Alumnos" />
+            </a>
+
+            <a href="~/Home/CerrarSesion" id="CerrarSesion">
+                <input type="button" value="Cerrar sesion" />
+            </a>
+
+        </form>
+    </div>
+}
+@if (User.IsInRole("Docente"))
+{
+    <div class="contenedor">
+        <form>
+            <h2>¡Bienvenido docente @User.Claims.FirstOrDefault(x => x.Type == "Nombre Completo").Value!</h2>
+
+            <a href="#" class="botonesEntrada">
+                <input type="button" value="Ver lista de alumnos"/>
+            </a>
+
+            <a href="~/Home/CerrarSesion" id="CerrarSesion">
+                <input type="button" value="Cerrar sesion" />
+            </a>
+
+        </form>
+    </div>
+}
+

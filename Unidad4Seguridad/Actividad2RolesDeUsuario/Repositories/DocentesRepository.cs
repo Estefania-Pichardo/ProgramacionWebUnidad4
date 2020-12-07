@@ -12,5 +12,10 @@ namespace Actividad2RolesDeUsuario.Repositories
         {
 
         }
+
+        public Docente GetDocenteByClave(int clave)
+        {
+            return Context.Docente.FirstOrDefault(x => x.Clave == clave);
+        }
     }
 }

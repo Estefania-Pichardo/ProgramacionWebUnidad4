@@ -20,7 +20,7 @@ namespace Actividad2RolesDeUsuario
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                options =>
                {
-                   options.LoginPath = "/Home/Index";
+                   options.LoginPath = "/Home/IniciarSesion";
                    options.LogoutPath = "/Home/CerrarSesion";
                     //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
                     options.AccessDeniedPath = "/Home/Index";

@@ -6,16 +6,14 @@
 
 <h2>Inicia sesión docente</h2>
 <section class="formulario">
-    <form method="post" action="~/Home/IniciarSesion">
+    <form method="post" action="~/Home/IniciarSesionDocente">
         <label>Clave:</label>
         <input type="number" asp-for="Clave" required /><br />
         <label>Contraseña:</label>
         <input type="password" asp-for="Contraseña" required /><br />
 
-
         <input type="submit" value="Entrar" /><br />
 
         @Html.ValidationSummary()
     </form>
-
 </section>
