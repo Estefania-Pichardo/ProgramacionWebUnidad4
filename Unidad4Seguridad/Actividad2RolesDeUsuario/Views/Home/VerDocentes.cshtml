@@ -30,12 +30,12 @@
             <tr>
                 <td class="center">@(x++)</td>
                 <td style="width:40px">@maestro.Clave</td>
-                <td>@maestro.Nombre</td>
+                <td>@((maestro.Activo==1)?maestro.Nombre:maestro.Nombre + "(Desactivado)")</td>
                 <td class="center">
-                    <a href="~/Home/EditarDocente/@maestro.Id"><i class="fa fa-edit"></i> Editar</a>
-                    <a href="~/Home/CambiarContraseña/@maestro.Id"><i class="fa fa-edit"></i> Cambiar Contraseña</a>
-                    <a href="~/Home/Eliminar/@maestro.Id"><i class="fa fa-remove"></i> Eliminar</a>
-                    <a href="~/Home/Imagen/@maestro.Id"><i class="fa fa-image"></i> Ver alumnos</a>
+                    <a href="~/Home/EditarDocente/@maestro.Id"> Editar</a>
+                    <a href="~/Home/CambiarContraseña/@maestro.Id">Cambiar Contraseña</a>
+                    <a href="#" onclick="desactivar(@maestro.Id)">@((maestro.Activo==1)? "Desactivar" : "Activar")</a>
+                    <a href="~/Home/Imagen/@maestro.Id">Ver alumnos</a>
 
                 </td>
             </tr>
@@ -44,3 +44,16 @@
     </tbody>
 </table>
 
+<form method="post" action="~/Home/DesactivarDocente">
+    <input type="number" hidden name="Id" id="docenteId" />
+</form>
+
+<script>
+
+    function desactivar(id) {
+        if (confirm('Estas seguro que deseas desactivar al docente seleccionado?')) {
+            document.getElementById("docenteId").value = id;
+            document.querySelector("form").submit();
+        }
+    }
+</script>

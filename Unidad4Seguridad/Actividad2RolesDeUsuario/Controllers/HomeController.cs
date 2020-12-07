@@ -19,8 +19,6 @@ namespace Actividad2RolesDeUsuario.Controllers
         {
             return View();
         }
-
-
         [AllowAnonymous]
         public IActionResult IniciarSesionDirector()
         {
@@ -84,23 +82,32 @@ namespace Actividad2RolesDeUsuario.Controllers
 
             try
             {
-                if (docente != null && docente.Contraseña == HashingHelpers.GetHash(d.Contraseña) && docente.Activo == 1)
+                if (docente != null && docente.Contraseña == HashingHelpers.GetHash(d.Contraseña))
                 {
-                    List<Claim> informacion = new List<Claim>();
+                    if(docente.Activo==1)
+                    {
+                        List<Claim> informacion = new List<Claim>();
 
-                    informacion.Add(new Claim(ClaimTypes.Name, "Usuario" + docente.Nombre));
-                    informacion.Add(new Claim("Clave", docente.Clave.ToString()));
-                    informacion.Add(new Claim(ClaimTypes.Role, "Docente"));
-                    informacion.Add(new Claim("Nombre Completo", docente.Nombre));
-                    informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
+                        informacion.Add(new Claim(ClaimTypes.Name, "Usuario" + docente.Nombre));
+                        informacion.Add(new Claim("Clave", docente.Clave.ToString()));
+                        informacion.Add(new Claim(ClaimTypes.Role, "Docente"));
+                        informacion.Add(new Claim("Nombre Completo", docente.Nombre));
+                        informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
 
-                    var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                        var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
-                    new AuthenticationProperties { IsPersistent = true });
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,
+                        new AuthenticationProperties { IsPersistent = true });
 
-                    return RedirectToAction("Principal", docente.Clave);
+                        return RedirectToAction("Principal", docente.Clave);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Lo sentimos, su usuario esta desactivado, hable con su superior para activar la cuenta");
+                        return View(d);
+                    }
+                   
                 }
                 else
                 {
@@ -262,6 +269,27 @@ namespace Actividad2RolesDeUsuario.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(docente);
             }
+        }
+
+        [HttpPost]
+        public IActionResult DesactivarDocente(Docente d)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+
+            var docenteDesactivar = repos.Get(d.Id);
+            if(docenteDesactivar!=null&&docenteDesactivar.Activo==1)
+            {
+                docenteDesactivar.Activo = 0;
+                repos.Update(docenteDesactivar);
+            }
+            else
+            {
+                docenteDesactivar.Activo = 1;
+                repos.Update(docenteDesactivar);
+            }
+            return RedirectToAction("VerDocentes");
+
         }
     }
 }
