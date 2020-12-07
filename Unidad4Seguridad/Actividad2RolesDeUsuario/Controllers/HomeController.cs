@@ -153,7 +153,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             try
             {
                 var existe = repos.GetDocenteByClave(d.Clave);
-                if (existe!=null)
+                if (existe != null)
                 {
                     ModelState.AddModelError("", "El docente ya se encuentra registrado");
                     return View(d);
@@ -175,5 +175,93 @@ namespace Actividad2RolesDeUsuario.Controllers
 
         }
 
+        [Authorize(Roles ="Director")]
+        public IActionResult EditarDocente(int id)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var docente = repos.Get(id);
+
+            if (docente == null)
+            {
+                return RedirectToAction("VerDocentes");
+            }
+
+            return View(docente);
+        }
+
+        [Authorize(Roles = "Director")]
+        [HttpPost]
+        public IActionResult EditarDocente(Docente d)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var docente = repos.Get(d.Id);
+            try
+            {
+                if (docente != null)
+                {
+                    docente.Nombre = d.Nombre;
+                    docente.Clave = d.Clave;
+                    //docente.Contraseña = HashingHelpers.GetHash(d.Contraseña);
+
+                    repos.Update(docente);
+                }
+                return RedirectToAction("VerDocentes");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(docente);
+            }
+        }
+
+        [Authorize(Roles ="Director")]
+        public IActionResult CambiarContraseña(int id)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var docente = repos.Get(id);
+
+            if (docente == null)
+            {
+                return RedirectToAction("VerDocentes");
+            }
+
+            return View(docente);
+        }
+
+        [Authorize(Roles = "Director")]
+        [HttpPost]
+        public IActionResult CambiarContraseña(Docente d, string contraseñaNueva1, string contraseñaNueva2)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var docente = repos.Get(d.Id);
+            try
+            {
+                if (docente != null)
+                {
+                    if (contraseñaNueva1 == contraseñaNueva2)
+                    {
+                        docente.Contraseña = contraseñaNueva1;
+                        docente.Contraseña = HashingHelpers.GetHash(contraseñaNueva1);
+                        repos.Update(docente);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("","Las contraseñas no coinciden");
+                        return View(docente);
+                    }
+                    
+                }
+                return RedirectToAction("VerDocentes");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(docente);
+            }
+        }
     }
 }

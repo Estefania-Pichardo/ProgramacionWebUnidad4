@@ -19,7 +19,8 @@
     <thead>
         <tr>
             <th>#</th>
-            <th colspan="2">Nombre</th>
+            <th>Clave</th>
+            <th>Nombre</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -31,7 +32,8 @@
                 <td style="width:40px">@maestro.Clave</td>
                 <td>@maestro.Nombre</td>
                 <td class="center">
-                    <a href="~/Home/Editar/@maestro.Id"><i class="fa fa-edit"></i> Editar</a>
+                    <a href="~/Home/EditarDocente/@maestro.Id"><i class="fa fa-edit"></i> Editar</a>
+                    <a href="~/Home/CambiarContraseña/@maestro.Id"><i class="fa fa-edit"></i> Cambiar Contraseña</a>
                     <a href="~/Home/Eliminar/@maestro.Id"><i class="fa fa-remove"></i> Eliminar</a>
                     <a href="~/Home/Imagen/@maestro.Id"><i class="fa fa-image"></i> Ver alumnos</a>
 

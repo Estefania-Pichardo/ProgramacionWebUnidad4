@@ -1,0 +1,33 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+@model Actividad2RolesDeUsuario.Models.Docente
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Cambiar contraseña</h2>
+
+<section class="formulario">
+    <form method="post" action="~/Home/CambiarContraseña">
+        <input type="hidden" asp-for="Id" />
+        <label>Nombre completo:</label>
+        <input type="text" asp-for="Nombre" readonly="readonly" /><br />
+        <label>Contraseña nueva:</label>
+        <input type="password" asp-for="Contraseña" name="contraseñaNueva1" required /><br />
+        <label>Confirma tu nueva contraseña:</label>
+        <input type="password" required name="contraseñaNueva2" /><br />
+        @Html.ValidationSummary()
+        <input type="submit" value="Cambiar Contraseña" />
+        <a>
+            <input type="button" value="Cancelar" />
+        </a>
+
+    </form>
+
+</section>
+
+<script>
+    function submit() {
+        alert('La contraseña se cambio exitosamente');
+    }
+</script>
