@@ -37,19 +37,23 @@ namespace Actividad2RolesDeUsuario.Models
                 entity.HasIndex(e => e.IdMaestro)
                     .HasName("fk_IdMaestro_idx");
 
-                entity.Property(e => e.Id).HasColumnType("int(11)");
+                entity.HasIndex(e => e.NumControl)
+                    .HasName("NumControl_UNIQUE")
+                    .IsUnique();
 
-                entity.Property(e => e.Apellidos)
-                    .IsRequired()
-                    .HasColumnType("varchar(45)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                entity.Property(e => e.Id).HasColumnType("int(11)");
 
                 entity.Property(e => e.IdMaestro).HasColumnType("int(11)");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasColumnType("varchar(45)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.NumControl)
+                    .IsRequired()
+                    .HasColumnType("varchar(9)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 

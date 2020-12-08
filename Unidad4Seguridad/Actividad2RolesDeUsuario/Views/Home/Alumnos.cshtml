@@ -1,0 +1,61 @@
+﻿@model Actividad2RolesDeUsuario.Models.Docente
+@{
+    Layout = "_Layout";
+
+}
+
+
+<h2>Alumnos por docente</h2>
+
+<h3>Docente: @Model.Nombre</h3>
+
+<table>
+    <colgroup>
+        <col style="width:50px" />
+        <col style="width:40px" />
+        <col />
+        <col style="width:50%" />
+    </colgroup>
+    <caption>
+        <a href="~/Home/AgregarAlumno/@Model.Id"><i class="fa fa-plus"></i> Agregar Alumno al grupo</a>
+    </caption>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>NumControl</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var alumno in Model.Alumno)
+        {
+            <tr>
+                <td style="width:40px">@alumno.Id</td>
+                <td>@alumno.NumControl</td>
+                <td>@alumno.Nombre</td>
+                <td class="center">
+                    <a href="~/Home/EditarAlumno/@alumno.Id"> Editar</a>
+                    <a href="#" onclick="desactivar(@alumno.Id)">Eliminar</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<form method="post" action="~/Home/EliminarAlumno">
+    <input type="number" hidden name="Id" id="alumnoId" />
+</form>
+
+<script>
+
+    function desactivar(id) {
+        if (confirm('Estas seguro que deseas eliminar al alumno seleccionado?')) {
+            document.getElementById("docenteId").value = id;
+            document.querySelector("form").submit();
+        }
+    }
+</script>
+
+

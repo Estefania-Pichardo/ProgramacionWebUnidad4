@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Actividad2RolesDeUsuario.Models;
 using Actividad2RolesDeUsuario.Repositories;
+using Actividad2RolesDeUsuario.Models.ViewModels;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Actividad2RolesDeUsuario.Controllers
 {
@@ -84,7 +87,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             {
                 if (docente != null && docente.Contraseña == HashingHelpers.GetHash(d.Contraseña))
                 {
-                    if(docente.Activo==1)
+                    if (docente.Activo == 1)
                     {
                         List<Claim> informacion = new List<Claim>();
 
@@ -107,7 +110,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                         ModelState.AddModelError("", "Lo sentimos, su usuario esta desactivado, hable con su superior para activar la cuenta");
                         return View(d);
                     }
-                   
+
                 }
                 else
                 {
@@ -182,7 +185,7 @@ namespace Actividad2RolesDeUsuario.Controllers
 
         }
 
-        [Authorize(Roles ="Director")]
+        [Authorize(Roles = "Director")]
         public IActionResult EditarDocente(int id)
         {
             rolesusuarioContext context = new rolesusuarioContext();
@@ -223,7 +226,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             }
         }
 
-        [Authorize(Roles ="Director")]
+        [Authorize(Roles = "Director")]
         public IActionResult CambiarContraseña(int id)
         {
             rolesusuarioContext context = new rolesusuarioContext();
@@ -257,10 +260,10 @@ namespace Actividad2RolesDeUsuario.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("","Las contraseñas no coinciden");
+                        ModelState.AddModelError("", "Las contraseñas no coinciden");
                         return View(docente);
                     }
-                    
+
                 }
                 return RedirectToAction("VerDocentes");
             }
@@ -278,7 +281,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             DocentesRepository repos = new DocentesRepository(context);
 
             var docenteDesactivar = repos.Get(d.Id);
-            if(docenteDesactivar!=null&&docenteDesactivar.Activo==1)
+            if (docenteDesactivar != null && docenteDesactivar.Activo == 1)
             {
                 docenteDesactivar.Activo = 0;
                 repos.Update(docenteDesactivar);
@@ -289,7 +292,53 @@ namespace Actividad2RolesDeUsuario.Controllers
                 repos.Update(docenteDesactivar);
             }
             return RedirectToAction("VerDocentes");
+        }
 
+        [Authorize(Roles = "Director, Docente")]
+        public IActionResult Alumnos(int id)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            var docente = repos.GetAlumnosPorDocente(id);
+
+            if (docente != null)
+                return View(docente);
+            else
+                return RedirectToAction("VerDocentes");
+        }
+
+        [Authorize(Roles ="Director, Docente")]
+        public IActionResult AgregarAlumno(int id)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos= new DocentesRepository(context);
+            AgregarAlumnoViewModel vm = new AgregarAlumnoViewModel();
+            vm.Docente = repos.Get(id);
+
+            return View(vm);
+        }
+
+        [Authorize(Roles = "Director, Docente")]
+        [HttpPost]
+        public IActionResult AgregarAlumno(AgregarAlumnoViewModel vm)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            DocentesRepository repos = new DocentesRepository(context);
+            AlumnosRepository reposAlumno = new AlumnosRepository(context);
+
+            try
+            {
+                var idDocente = repos.GetDocenteByClave(vm.Docente.Clave).Id;
+                vm.Alumno.IdMaestro =idDocente ;
+                reposAlumno.Insert(vm.Alumno);
+                return RedirectToAction("VerDocentes");
+            } 
+            catch(Exception ex)
+            {
+                vm.Docente = repos.Get(vm.Docente.Id);
+                ModelState.AddModelError("", ex.Message);
+                return View(vm);
+            }  
         }
     }
 }

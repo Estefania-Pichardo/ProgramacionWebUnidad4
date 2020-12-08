@@ -1,0 +1,46 @@
+﻿@model Actividad2RolesDeUsuario.Models.ViewModels.AgregarAlumnoViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<h2>Agregar alumno a este grupo</h2>
+<h3>Grupo del docente @Model.Docente.Nombre</h3>
+<section class="formulario">
+    <form method="post" action="~/Home/AgregarAlumno">
+
+        <label>Numero de control:</label>
+        <input type="text" asp-for="Alumno.NumControl" required /><br />
+
+        <label>Nombre:</label>
+        <input type="text" asp-for="Alumno.Nombre" required /><br />
+
+        @if (Model.Docente != null)
+        {
+            <label>Clave del docente:</label>
+            <input type="number" asp-for="Docente.Clave" readonly />
+        }
+        else if (Model.Docente == null && User.IsInRole("Director"))
+        {
+            <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
+                <option>--Selecciona un docente--</option>
+            </select>
+        }
+
+        @*@if (User.IsInRole("Director"))
+        {
+            <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
+                <option>--Selecciona un docente--</option>
+            </select>
+        }*@
+        @*@if (User.IsInRole("Docente"))
+        {
+            <label>Docente:</label>
+            <input type="text" asp-for="Docentntes.FirstOrDefault(x=>x.Clave==User.Claims.FirstOrDefault(x=>x.Type=="Clave").Value)" required /><br />
+        }*@
+
+        <input type="submit" value="Agregar" /><br />
+
+        @Html.ValidationSummary()
+    </form>
+</section>

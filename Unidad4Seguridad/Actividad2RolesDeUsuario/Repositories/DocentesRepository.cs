@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Actividad2RolesDeUsuario.Models;
 
 namespace Actividad2RolesDeUsuario.Repositories
@@ -17,5 +18,11 @@ namespace Actividad2RolesDeUsuario.Repositories
         {
             return Context.Docente.FirstOrDefault(x => x.Clave == clave);
         }
+
+        public Docente GetAlumnosPorDocente(int id)
+        {
+            return Context.Docente.Include(x => x.Alumno).FirstOrDefault(x => x.Id == id);
+        }
+
     }
 }

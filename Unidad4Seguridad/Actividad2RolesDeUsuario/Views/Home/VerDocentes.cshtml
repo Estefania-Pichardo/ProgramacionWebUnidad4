@@ -35,7 +35,7 @@
                     <a href="~/Home/EditarDocente/@maestro.Id"> Editar</a>
                     <a href="~/Home/CambiarContraseña/@maestro.Id">Cambiar Contraseña</a>
                     <a href="#" onclick="desactivar(@maestro.Id)">@((maestro.Activo==1)? "Desactivar" : "Activar")</a>
-                    <a href="~/Home/Imagen/@maestro.Id">Ver alumnos</a>
+                    <a href="~/Home/Alumnos/@maestro.Id">Ver alumnos</a>
 
                 </td>
             </tr>
@@ -51,7 +51,7 @@
 <script>
 
     function desactivar(id) {
-        if (confirm('Estas seguro que deseas desactivar al docente seleccionado?')) {
+        if (confirm('Estas seguro que deseas desactivar/activar al docente seleccionado?')) {
             document.getElementById("docenteId").value = id;
             document.querySelector("form").submit();
         }
