@@ -36,7 +36,7 @@
                 <td>@alumno.Nombre</td>
                 <td class="center">
                     <a href="~/Home/EditarAlumno/@alumno.Id"> Editar</a>
-                    <a href="#" onclick="desactivar(@alumno.Id)">Eliminar</a>
+                    <a href="#" onclick="Eliminar(@alumno.Id)">Eliminar</a>
                 </td>
             </tr>
         }
@@ -50,9 +50,9 @@
 
 <script>
 
-    function desactivar(id) {
+    function Eliminar(id) {
         if (confirm('Estas seguro que deseas eliminar al alumno seleccionado?')) {
-            document.getElementById("docenteId").value = id;
+            document.getElementById("alumnoId").value = id;
             document.querySelector("form").submit();
         }
     }

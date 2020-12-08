@@ -389,5 +389,23 @@ namespace Actividad2RolesDeUsuario.Controllers
             }
 
         }
+
+        [HttpPost]
+        public IActionResult EliminarAlumno(Alumno a)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            AlumnosRepository repos = new AlumnosRepository(context);
+
+            var alumnoEliminar = repos.Get(a.Id);
+            if (alumnoEliminar != null)
+            {
+                repos.Delete(alumnoEliminar);
+            }
+            else
+            {
+                ModelState.AddModelError("","No se encontro el alumno a eliminar");
+            }
+            return RedirectToAction("Alumnos");
+        }
     }
 }
