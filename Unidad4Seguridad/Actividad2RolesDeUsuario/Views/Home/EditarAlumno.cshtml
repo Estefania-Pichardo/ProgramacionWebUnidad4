@@ -1,0 +1,37 @@
+﻿@model Actividad2RolesDeUsuario.Models.ViewModels.AgregarAlumnoViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<h2>Editar alumno</h2>
+<h3>Grupo del docente @Model.Docente.Nombre</h3>
+<section class="formulario">
+    <form method="post" action="~/Home/EditarAlumno">
+
+        <input type="hidden" asp-for="Alumno.Id" />
+        <label>Numero de control:</label>
+        <input type="text" asp-for="Alumno.NumControl" required readonly/><br />
+
+        <label>Nombre:</label>
+        <input type="text" asp-for="Alumno.Nombre" required /><br />
+
+        @if (User.IsInRole("Director"))
+        {
+            <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
+                <option selected="selected" value="">--Selecciona un docente--</option>
+            </select>
+        }
+        else if (User.IsInRole("Docente"))
+        {
+            <label>Clave del docente:</label>
+            <input type="number" asp-for="Docente.Clave" readonly />
+            <label>Docente:</label>
+            <input type="text" asp-for="Docente.Nombre" readonly />
+        }
+
+        <input type="submit" value="Editar" /><br />
+
+        @Html.ValidationSummary()
+    </form>
+</section>

@@ -329,7 +329,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             try
             {
                 var idDocente = repos.GetDocenteByClave(vm.Docente.Clave).Id;
-                vm.Alumno.IdMaestro =idDocente ;
+                vm.Alumno.IdMaestro =idDocente;
                 reposAlumno.Insert(vm.Alumno);
                 return RedirectToAction("VerDocentes");
             } 
@@ -339,6 +339,55 @@ namespace Actividad2RolesDeUsuario.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View(vm);
             }  
+        }
+
+        [Authorize(Roles ="Director, Docentes")]
+        public IActionResult EditarAlumno(int id)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            AlumnosRepository reposAlumno = new AlumnosRepository(context);
+            DocentesRepository reposDocente = new DocentesRepository(context);
+            AgregarAlumnoViewModel vm = new AgregarAlumnoViewModel();
+            vm.Alumno = reposAlumno.Get(id);
+            vm.Docentntes = reposDocente.GetAll();
+            vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
+
+            return View(vm);
+        }
+
+        [Authorize(Roles = "Director, Docentes")]
+        [HttpPost]
+        public IActionResult EditarAlumno(AgregarAlumnoViewModel vm)
+        {
+            rolesusuarioContext context = new rolesusuarioContext();
+            AlumnosRepository reposAlumno = new AlumnosRepository(context);
+            DocentesRepository reposDocente = new DocentesRepository(context);
+            try
+            {
+                var alumno = reposAlumno.Get(vm.Alumno.Id);
+                if(alumno!=null)
+                {
+                    alumno.Nombre = vm.Alumno.Nombre;
+                    alumno.IdMaestro = vm.Alumno.IdMaestro;
+                    reposAlumno.Update(alumno);
+                    return RedirectToAction("VerDocentes");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "No se encontro el alumno a editar");
+                    vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
+                    vm.Docentntes = reposDocente.GetAll();
+                    return View(vm);
+                }
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
+                vm.Docentntes = reposDocente.GetAll();
+                return View(vm);
+            }
+
         }
     }
 }
