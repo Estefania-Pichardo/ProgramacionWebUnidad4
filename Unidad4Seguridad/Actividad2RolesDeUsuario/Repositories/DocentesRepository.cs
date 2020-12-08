@@ -24,5 +24,18 @@ namespace Actividad2RolesDeUsuario.Repositories
             return Context.Docente.Include(x => x.Alumno).FirstOrDefault(x => x.Id == id);
         }
 
+        public override bool Validar(Docente entidad)
+        {
+            if(string.IsNullOrEmpty(entidad.Nombre))
+                throw new Exception("El nombre no puede estar vacio");
+            if(string.IsNullOrWhiteSpace(entidad.Contraseña))
+                throw new Exception("La contraseña no puede estar vacía");
+            if(entidad.Contraseña.Length<=8)
+                throw new Exception("La contraseña debe ser mayor a 5 caracteres");
+            if(entidad.Clave<=0)
+                throw new Exception("Escriba la clave de docente");
+            return true;
+        }
+
     }
 }

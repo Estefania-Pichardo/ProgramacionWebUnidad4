@@ -95,7 +95,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                         informacion.Add(new Claim("Clave", docente.Clave.ToString()));
                         informacion.Add(new Claim(ClaimTypes.Role, "Docente"));
                         informacion.Add(new Claim("Nombre Completo", docente.Nombre));
-                        informacion.Add(new Claim("Fecha Ingreso", DateTime.Now.ToString()));
+                        informacion.Add(new Claim("IdDocente", docente.Id.ToString()));
 
                         var claimsIdentity = new ClaimsIdentity(informacion, CookieAuthenticationDefaults.AuthenticationScheme);
                         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -139,6 +139,13 @@ namespace Actividad2RolesDeUsuario.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult AccesoDenegado()
+        {
+            return View();
+        }
+
+        //CRUD y cambiar contraseña de docentes
+
         [Authorize(Roles = "Director")]
         public IActionResult VerDocentes()
         {
@@ -165,7 +172,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                 var existe = repos.GetDocenteByClave(d.Clave);
                 if (existe != null)
                 {
-                    ModelState.AddModelError("", "El docente ya se encuentra registrado");
+                    ModelState.AddModelError("", "Ya existe un docente con esta clave");
                     return View(d);
                 }
                 else
@@ -175,7 +182,6 @@ namespace Actividad2RolesDeUsuario.Controllers
                     repos.Insert(d);
                     return RedirectToAction("VerDocentes");
                 }
-
             }
             catch (Exception ex)
             {
@@ -212,11 +218,10 @@ namespace Actividad2RolesDeUsuario.Controllers
                 if (docente != null)
                 {
                     docente.Nombre = d.Nombre;
-                    docente.Clave = d.Clave;
-                    //docente.Contraseña = HashingHelpers.GetHash(d.Contraseña);
 
                     repos.Update(docente);
                 }
+
                 return RedirectToAction("VerDocentes");
             }
             catch (Exception ex)
@@ -307,6 +312,8 @@ namespace Actividad2RolesDeUsuario.Controllers
                 return RedirectToAction("VerDocentes");
         }
 
+        //Empieza CRUD de Alumnos
+
         [Authorize(Roles ="Director, Docente")]
         public IActionResult AgregarAlumno(int id)
         {
@@ -341,7 +348,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             }  
         }
 
-        [Authorize(Roles ="Director, Docentes")]
+        [Authorize(Roles ="Director, Docente")]
         public IActionResult EditarAlumno(int id)
         {
             rolesusuarioContext context = new rolesusuarioContext();
@@ -355,7 +362,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             return View(vm);
         }
 
-        [Authorize(Roles = "Director, Docentes")]
+        [Authorize(Roles = "Director, Docente")]
         [HttpPost]
         public IActionResult EditarAlumno(AgregarAlumnoViewModel vm)
         {
@@ -390,6 +397,7 @@ namespace Actividad2RolesDeUsuario.Controllers
 
         }
 
+        [Authorize(Roles = "Director, Docente")]
         [HttpPost]
         public IActionResult EliminarAlumno(Alumno a)
         {

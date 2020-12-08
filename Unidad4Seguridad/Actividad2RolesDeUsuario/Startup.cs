@@ -23,7 +23,7 @@ namespace Actividad2RolesDeUsuario
                    options.LoginPath = "/Home/IniciarSesion";
                    options.LogoutPath = "/Home/CerrarSesion";
                     //options.Cookie.Expiration = TimeSpan.FromMinutes(20);
-                    options.AccessDeniedPath = "/Home/Index";
+                    options.AccessDeniedPath = "/Home/AccesoDenegado";
                    options.Cookie.Name = "Act2RolesUsuario";
                });
             services.AddMvc();

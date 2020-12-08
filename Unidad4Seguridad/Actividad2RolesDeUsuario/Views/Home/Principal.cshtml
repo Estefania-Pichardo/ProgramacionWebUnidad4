@@ -29,7 +29,7 @@
         <form>
             <h3>¡Bienvenido docente @User.Claims.FirstOrDefault(x => x.Type == "Nombre Completo").Value!</h3>
 
-            <a href="#" class="botonesEntrada">
+            <a href="~/Home/Alumnos/@(int.Parse(User.Claims.FirstOrDefault(x=>x.Type=="IdDocente").Value))" class="botonesEntrada">
                 <input type="button" value="Ver lista de alumnos"/>
             </a>
 
