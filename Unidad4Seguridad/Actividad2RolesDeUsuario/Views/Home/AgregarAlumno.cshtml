@@ -5,7 +5,14 @@
 }
 
 <h2>Agregar alumno a este grupo</h2>
-@*<h3>Grupo del docente @((Model.Docente.Nombre!=null)? Model.Docente.Nombre : "Docente")</h3>*@
+@if (User.IsInRole("Director"))
+{
+    <h2>Grupo del docente @((Model.Docente.Nombre!=null)? Model.Docente.Nombre : "Docente")</h2>
+}
+else if (User.IsInRole("Docente"))
+{
+    <h2>Grupo del docente @User.Claims.FirstOrDefault(x=>x.Type=="Nombre Completo").Value</h2>
+}
 <section class="formulario">
     <form method="post" action="~/Home/AgregarAlumno">
 
@@ -17,30 +24,6 @@
 
         <label>Clave del docente:</label>
         <input type="number" asp-for="Docente.Clave" readonly /><br />
-
-        @*@if (Model.Docente != null)
-        {
-            <label>Clave del docente:</label>
-            <input type="number" asp-for="Docente.Clave" readonly />
-        }
-        else if (Model.Docente == null && User.IsInRole("Director"))
-        {
-            <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
-                <option>--Selecciona un docente--</option>
-            </select>
-        }*@
-
-        @*@if (User.IsInRole("Director"))
-        {
-            <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
-                <option>--Selecciona un docente--</option>
-            </select>
-        }*@
-        @*@if (User.IsInRole("Docente"))
-        {
-            <label>Docente:</label>
-            <input type="text" asp-for="Docentntes.FirstOrDefault(x=>x.Clave==User.Claims.FirstOrDefault(x=>x.Type=="Clave").Value)" required /><br />
-        }*@
 
         <input type="submit" value="Agregar" /><br />
 

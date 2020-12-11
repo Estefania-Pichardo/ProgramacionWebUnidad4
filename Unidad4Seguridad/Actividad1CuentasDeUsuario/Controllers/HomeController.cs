@@ -249,6 +249,12 @@ namespace Actividad1CuentasDeUsuario.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult AccesoDenegado()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public async Task<IActionResult> CerrarSesion()
         {
             await HttpContext.SignOutAsync();
@@ -332,5 +338,6 @@ namespace Actividad1CuentasDeUsuario.Controllers
             }
             return RedirectToAction("Index");
         }
+
     }
 }

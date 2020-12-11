@@ -38,7 +38,7 @@ namespace Actividad2RolesDeUsuario.Controllers
 
             try
             {
-                if (director != null && director.Contraseña == d.Contraseña)
+                if (director != null && director.Contraseña == HashingHelpers.GetHash(d.Contraseña))
                 {
                     List<Claim> informacion = new List<Claim>();
 
@@ -307,7 +307,21 @@ namespace Actividad2RolesDeUsuario.Controllers
             var docente = repos.GetAlumnosPorDocente(id);
 
             if (docente != null)
-                return View(docente);
+            {
+                if (User.IsInRole("Docente"))
+                {
+                    if (User.Claims.FirstOrDefault(x => x.Type == "IdDocente").Value == docente.Id.ToString())
+                    {
+                        return View(docente);
+                    }
+                    else
+                    {
+                        return RedirectToAction("AccesoDenegado");
+                    }
+                }
+                else
+                    return View(docente);
+            }
             else
                 return RedirectToAction("VerDocentes");
         }
@@ -321,6 +335,22 @@ namespace Actividad2RolesDeUsuario.Controllers
             DocentesRepository repos= new DocentesRepository(context);
             AgregarAlumnoViewModel vm = new AgregarAlumnoViewModel();
             vm.Docente = repos.Get(id);
+            if (vm.Docente != null)
+            {
+                if (User.IsInRole("Docente"))
+                {
+                    if (User.Claims.FirstOrDefault(x => x.Type == "IdDocente").Value == vm.Docente.Id.ToString())
+                    {
+                        return View(vm);
+                    }
+                    else
+                    {
+                        return RedirectToAction("AccesoDenegado");
+                    }
+                }
+                else
+                    return View(vm);
+            }
 
             return View(vm);
         }
@@ -335,10 +365,10 @@ namespace Actividad2RolesDeUsuario.Controllers
 
             try
             {
-               // vm.Docente = repos.Get(vm.Docente.Id);
+                // vm.Docente = repos.Get(vm.Docente.Id);
                 //vm.Docentntes = repos.GetAll();
                 var idDocente = repos.GetDocenteByClave(vm.Docente.Clave).Id;
-                vm.Alumno.IdMaestro =idDocente;
+                vm.Alumno.IdMaestro = idDocente;
                 reposAlumno.Insert(vm.Alumno);
                 return RedirectToAction("Principal");
             } 
@@ -360,9 +390,26 @@ namespace Actividad2RolesDeUsuario.Controllers
             AgregarAlumnoViewModel vm = new AgregarAlumnoViewModel();
             vm.Alumno = reposAlumno.Get(id);
             vm.Docentntes = reposDocente.GetAll();
-            vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
 
-            return View(vm);
+            if (vm.Alumno != null)
+            {
+                if (User.IsInRole("Docente"))
+                {
+                    vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
+
+                    if (User.Claims.FirstOrDefault(x => x.Type == "Clave").Value == vm.Docente.Clave.ToString())
+                    {
+                        return View(vm);
+                    }
+                    else
+                    {
+                        return RedirectToAction("AccesoDenegado");
+                    }
+                }
+                else
+                    return View(vm);
+            }
+            else return RedirectToAction("Principal");
         }
 
         [Authorize(Roles = "Director, Docente")]
@@ -378,7 +425,10 @@ namespace Actividad2RolesDeUsuario.Controllers
                 if(alumno!=null)
                 {
                     alumno.Nombre = vm.Alumno.Nombre;
-                    alumno.IdMaestro = vm.Alumno.IdMaestro;
+                    if(User.IsInRole("Director"))
+                    {
+                        alumno.IdMaestro = vm.Alumno.IdMaestro;
+                    }     
                     reposAlumno.Update(alumno);
                     return RedirectToAction("Principal");
                 }

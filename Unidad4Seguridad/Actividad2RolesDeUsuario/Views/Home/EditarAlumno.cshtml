@@ -5,13 +5,12 @@
 }
 
 <h2>Editar alumno</h2>
-@*<h3>Grupo del docente @Model.Docente.Nombre</h3>*@
 <section class="formulario">
     <form method="post" action="~/Home/EditarAlumno">
 
         <input type="hidden" asp-for="Alumno.Id" />
         <label>Numero de control:</label>
-        <input type="text" asp-for="Alumno.NumControl" required readonly/><br />
+        <input type="text" asp-for="Alumno.NumControl" required readonly /><br />
 
         <label>Nombre:</label>
         <input type="text" asp-for="Alumno.Nombre" required /><br />
