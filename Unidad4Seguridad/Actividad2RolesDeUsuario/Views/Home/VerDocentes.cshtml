@@ -4,17 +4,17 @@
     int x = 1;
 }
 
-<h1>Lista de Docentes</h1>
+<h2>Lista de Docentes</h2>
 
 <table>
     <colgroup>
         <col style="width:50px" />
-        <col style="width:40px" />
-        <col />
-        <col style="width:50%" />
+        <col style="width:50px" />
+        <col/>
+        <col/>
     </colgroup>
     <caption>
-        <a href="~/Home/AgregarDocente"><i class="fa fa-plus"></i> Agregar docente</a>
+        <a href="~/Home/AgregarDocente">Agregar docente</a>
     </caption>
     <thead>
         <tr>
@@ -32,7 +32,7 @@
                 <td style="width:40px">@maestro.Clave</td>
                 <td>@((maestro.Activo==1)?maestro.Nombre:maestro.Nombre + "(Desactivado)")</td>
                 <td class="center">
-                    <a href="~/Home/EditarDocente/@maestro.Id"> Editar</a>
+                    <a href="~/Home/EditarDocente/@maestro.Id">Editar</a>
                     <a href="~/Home/CambiarContraseña/@maestro.Id">Cambiar Contraseña</a>
                     <a href="#" onclick="desactivar(@maestro.Id)">@((maestro.Activo==1)? "Desactivar" : "Activar")</a>
                     <a href="~/Home/Alumnos/@maestro.Id">Ver alumnos</a>

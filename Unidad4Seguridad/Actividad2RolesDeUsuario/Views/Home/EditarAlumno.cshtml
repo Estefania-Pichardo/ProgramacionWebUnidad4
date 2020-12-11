@@ -5,7 +5,7 @@
 }
 
 <h2>Editar alumno</h2>
-<h3>Grupo del docente @Model.Docente.Nombre</h3>
+@*<h3>Grupo del docente @Model.Docente.Nombre</h3>*@
 <section class="formulario">
     <form method="post" action="~/Home/EditarAlumno">
 
@@ -18,9 +18,10 @@
 
         @if (User.IsInRole("Director"))
         {
+            <label>Grupo del docente:</label>
             <select asp-for="Alumno.IdMaestro" asp-items="@(new SelectList(Model.Docentntes, "Id", "Nombre"))" id="cmdDocente">
                 <option selected="selected" value="">--Selecciona un docente--</option>
-            </select>
+            </select><br />
         }
         else if (User.IsInRole("Docente"))
         {

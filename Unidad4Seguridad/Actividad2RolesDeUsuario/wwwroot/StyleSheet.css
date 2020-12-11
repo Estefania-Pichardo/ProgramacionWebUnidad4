@@ -1,5 +1,5 @@
 ﻿html, body {
-    background-color: gray;
+    background-color: #40916c;
     height: 100%;
     width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,21 +39,28 @@ main h2 {
     /*height:400px;*/
 }
 
-    .contenedor a {
+    .contenedor a, .formulario a {
         display: block;
         width: 80%;
-        background-color: #89043D;
         color: white;
         font-weight: bold;
         margin: 10px auto;
     }
 
-        .contenedor a input[type=button] {
+        .contenedor a input[type=button], .formulario a input[type=button] {
             width: 100%;
-            background-color: green;
+            background-color: #2d6a4f;
             color: white;
             font-weight: bold;
             padding: 20px;
+            font-size: medium;
+        }
+        .formulario a input[type=button] {
+            width: 100%;
+            background-color: #2d6a4f;
+            color: white;
+            padding: 5px;
+            font-size: medium;
         }
 
     .formulario form label {
@@ -63,7 +70,7 @@ main h2 {
         text-align: center;
     }
 
-    .formulario form input[type=number], .formulario form input[type=password], .formulario form input[type=text] {
+    .formulario form input[type=number], .formulario form input[type=password], .formulario form input[type=text], .formulario form select {
         display: block;
         margin: auto;
         width: 80%;
@@ -90,7 +97,7 @@ main h2 {
 
     .formulario form input[type=submit], .formulario #CrearCuenta {
         display: block;
-        background-color: green;
+        background-color: #2d6a4f;
         width: 80%;
         padding: 5px;
         margin: auto;
@@ -101,11 +108,14 @@ main h2 {
     .formulario .crear, .formulario #sesion {
         text-align: center;
     }
+    .formulario #CerrarSesion{
+        background-color:red;
+    }
 
-#cuenta {
-    padding: 20px;
-    width: 60%;
-}
+    #cuenta {
+        padding: 20px;
+        width: 60%;
+    }
 
 .formulario h4 {
     margin: 0;
@@ -157,18 +167,22 @@ main h2 {
 
 /*Estilos tabla*/
 table {
-    width: 50%;
+    width: 80%;
     padding: 10px;
-    border: 1px solid #9ed0a4;
     margin: 10px auto;
-    background-color: rgba(255, 255, 255, 0.57);
+    border-collapse: collapse;
+    border-radius: 10px;
+    background-color: #b7e4c7;
 }
+    table thead {
+        background-color: #081c15;
+        color: white
+    }
 
 
     table a {
-        text-decoration: none;
-        color: black;
         margin-right: 20px;
+        color:black;
     }
 
 .center {
@@ -178,6 +192,9 @@ table {
 caption {
     padding: 20px;
     font-size: large;
+}
+caption a{
+    margin:0;
 }
 
 footer {

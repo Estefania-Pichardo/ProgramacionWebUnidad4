@@ -12,9 +12,6 @@
     </p>
     <form method="post" action="~/Home/ActivarCuenta">
         <label>Código:</label>
-        @*<label>Activar cuenta de correo electronico @User.Claims.FirstOrDefault(x => x.Type == "CorreoActivar").Value</label>*@
-
-        @*<input type="hidden" value="@User.Claims.FirstOrDefault(x => x.Type == "CorreoActivar").Value" name="correo" />*@
         <input type="number" required name="codigo" style="display:block; width:80%;"/><br />
 
         <input type="submit" value="Activa mi cuenta" />

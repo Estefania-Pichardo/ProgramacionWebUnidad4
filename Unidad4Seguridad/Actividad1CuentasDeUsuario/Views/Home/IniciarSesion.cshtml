@@ -8,20 +8,21 @@
 <section class="formulario">
     <form method="post" action="~/Home/IniciarSesion">
         <label>Correo Electónico:</label>
-        <input type="email" asp-for="Correo" required/><br />
+        <input type="email" asp-for="Correo" required /><br />
         <label>Contraseña:</label>
-        <input type="password" asp-for="Contraseña" required/><br />
+        <input type="password" asp-for="Contraseña" required /><br />
 
+        @Html.ValidationSummary()
 
         <input type="submit" value="Entrar" /><br />
-        <input type="checkbox" id="recordar" name="persistant" class="RecordarDatos"/>
+        <input type="checkbox" id="recordar" name="persistant" class="RecordarDatos" />
         <label for="recordar" id="etiquetaRecordar">Recordar mis datos</label><br />
         <label id="terminos">
             Al continuar aceptas los
             <a href="">Terminos y condiciones</a>
             y el <a href="">Aviso de privacidad</a> de Music+
         </label>
-        @Html.ValidationSummary()
+
     </form>
     <div class="crear">
         <p>Aun no tienes una cuenta? <a href="Registrar">Crea una aqui</a></p>

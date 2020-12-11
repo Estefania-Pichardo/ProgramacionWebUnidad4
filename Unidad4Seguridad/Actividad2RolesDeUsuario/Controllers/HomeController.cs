@@ -335,14 +335,17 @@ namespace Actividad2RolesDeUsuario.Controllers
 
             try
             {
+               // vm.Docente = repos.Get(vm.Docente.Id);
+                //vm.Docentntes = repos.GetAll();
                 var idDocente = repos.GetDocenteByClave(vm.Docente.Clave).Id;
                 vm.Alumno.IdMaestro =idDocente;
                 reposAlumno.Insert(vm.Alumno);
-                return RedirectToAction("VerDocentes");
+                return RedirectToAction("Principal");
             } 
             catch(Exception ex)
             {
                 vm.Docente = repos.Get(vm.Docente.Id);
+                vm.Docentntes = repos.GetAll();
                 ModelState.AddModelError("", ex.Message);
                 return View(vm);
             }  
@@ -377,7 +380,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                     alumno.Nombre = vm.Alumno.Nombre;
                     alumno.IdMaestro = vm.Alumno.IdMaestro;
                     reposAlumno.Update(alumno);
-                    return RedirectToAction("VerDocentes");
+                    return RedirectToAction("Principal");
                 }
                 else
                 {
@@ -413,7 +416,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             {
                 ModelState.AddModelError("","No se encontro el alumno a eliminar");
             }
-            return RedirectToAction("Alumnos");
+            return RedirectToAction("Principal");
         }
     }
 }

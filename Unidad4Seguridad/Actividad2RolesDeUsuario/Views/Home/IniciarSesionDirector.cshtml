@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 
-<h2>Inicia sesión director</h2>
+<h2>Inicia sesión como director</h2>
 <section class="formulario">
     <form method="post" action="~/Home/IniciarSesionDirector">
         <label>Clave:</label>
@@ -12,7 +12,7 @@
         <label>Contraseña:</label>
         <input type="password" asp-for="Contraseña" required /><br />
 
-        <input type="submit" value="Entrar" /><br />
+        <input type="submit" value="Entrar" class="ingresar"/><br />
 
         @Html.ValidationSummary()
     </form>

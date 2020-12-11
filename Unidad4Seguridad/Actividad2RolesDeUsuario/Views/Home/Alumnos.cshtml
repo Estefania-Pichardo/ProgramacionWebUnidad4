@@ -1,6 +1,7 @@
 ﻿@model Actividad2RolesDeUsuario.Models.Docente
 @{
     Layout = "_Layout";
+    int x = 1;
 
 }
 <h2>Alumnos del docente: @Model.Nombre</h2>
@@ -8,16 +9,16 @@
 <table>
     <colgroup>
         <col style="width:50px" />
-        <col style="width:40px" />
+        <col style="width:100px" />
         <col />
-        <col style="width:50%" />
+        <col />
     </colgroup>
     <caption>
-        <a href="~/Home/AgregarAlumno/@Model.Id"><i class="fa fa-plus"></i> Agregar Alumno al grupo</a>
+        <a href="~/Home/AgregarAlumno/@Model.Id">Agregar Alumno al grupo</a>
     </caption>
     <thead>
         <tr>
-            <th>Id</th>
+            <th>#</th>
             <th>NumControl</th>
             <th>Nombre</th>
             <th>Acciones</th>
@@ -27,7 +28,7 @@
         @foreach (var alumno in Model.Alumno)
         {
             <tr>
-                <td style="width:40px">@alumno.Id</td>
+                <td>@(x++)</td>
                 <td>@alumno.NumControl</td>
                 <td>@alumno.Nombre</td>
                 <td class="center">
