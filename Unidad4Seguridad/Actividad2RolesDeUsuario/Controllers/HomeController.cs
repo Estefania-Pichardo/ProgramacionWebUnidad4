@@ -370,7 +370,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                 var idDocente = repos.GetDocenteByClave(vm.Docente.Clave).Id;
                 vm.Alumno.IdMaestro = idDocente;
                 reposAlumno.Insert(vm.Alumno);
-                return RedirectToAction("Principal");
+                return RedirectToAction("Alumnos", new {id=idDocente});
             } 
             catch(Exception ex)
             {
@@ -410,6 +410,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                     return View(vm);
             }
             else return RedirectToAction("Principal");
+
         }
 
         [Authorize(Roles = "Director, Docente")]
@@ -430,7 +431,7 @@ namespace Actividad2RolesDeUsuario.Controllers
                         alumno.IdMaestro = vm.Alumno.IdMaestro;
                     }     
                     reposAlumno.Update(alumno);
-                    return RedirectToAction("Principal");
+                    return RedirectToAction("Alumnos", new { id = alumno.IdMaestro });
                 }
                 else
                 {
@@ -466,7 +467,7 @@ namespace Actividad2RolesDeUsuario.Controllers
             {
                 ModelState.AddModelError("","No se encontro el alumno a eliminar");
             }
-            return RedirectToAction("Principal");
+            return RedirectToAction("Alumnos", new { id = alumnoEliminar.IdMaestro });
         }
     }
 }
