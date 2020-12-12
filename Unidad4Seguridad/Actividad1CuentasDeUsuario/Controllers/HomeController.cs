@@ -287,7 +287,9 @@ namespace Actividad1CuentasDeUsuario.Controllers
                     message.To.Add(correo);
                     message.Subject = "Recupera tu contraseña";
 
-                    message.Body = $"Utiliza esta contraseña temporal para ingresar a tu cuenta, recuerda que una vez que ingreses deberas cambiarla: {contraseñaTemporal} ";
+                    string mensaje = System.IO.File.ReadAllText(Environment.WebRootPath + "/RecuperarContraseña.html");
+                    message.IsBodyHtml = true;
+                    message.Body = mensaje.Replace("{##contrasena##}", contraseñaTemporal.ToString());
 
                     SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
                     client.EnableSsl = true;

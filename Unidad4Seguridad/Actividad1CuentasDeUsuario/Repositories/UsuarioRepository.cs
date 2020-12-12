@@ -19,7 +19,9 @@ namespace Actividad1CuentasDeUsuario.Repositories
         {
             if (string.IsNullOrEmpty(entidad.Correo))
                 throw new Exception("Ingrese su correo electronico");
-                
+            if(string.IsNullOrEmpty(entidad.Contraseña))
+                throw new Exception("Ingrese su contraseña");
+
             return true;
         }
     }

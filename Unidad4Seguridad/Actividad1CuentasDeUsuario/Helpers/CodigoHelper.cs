@@ -10,10 +10,7 @@ namespace Actividad1CuentasDeUsuario
         public static int GetCodigo()
         {
             Random r = new Random();
-            int cod1 = r.Next(100,1000);
-            int cod2 = r.Next(100,1000);
-
-            return (cod1 + cod2);
+            return r.Next(1000000,2000000);
         }
     }
 }
