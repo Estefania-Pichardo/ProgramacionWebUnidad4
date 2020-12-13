@@ -27,6 +27,20 @@ else if (User.IsInRole("Docente"))
 
         <input type="submit" value="Agregar" /><br />
 
+        @if (User.IsInRole("Director"))
+        {
+            <a href="~/Home/Alumnos/@Model.Docente.Id">
+                <input type="button" value="Cancelar" />
+            </a>
+        }
+        else if (User.IsInRole("Docente"))
+        {
+            <a href="~/Home/Alumnos/@(int.Parse(User.Claims.FirstOrDefault(x=>x.Type=="IdDocente").Value))">
+                <input type="button" value="Cancelar" />
+            </a>
+        }
+
+
         @Html.ValidationSummary()
     </form>
 </section>

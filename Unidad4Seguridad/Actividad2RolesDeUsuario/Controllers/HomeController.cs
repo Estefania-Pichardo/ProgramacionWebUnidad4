@@ -319,7 +319,9 @@ namespace Actividad2RolesDeUsuario.Controllers
                         return RedirectToAction("AccesoDenegado");
                     }
                 }
-                else
+                else if (docente.Activo != 1)
+                    return RedirectToAction("VerDocentes");
+                else    
                     return View(docente);
             }
             else
@@ -348,6 +350,8 @@ namespace Actividad2RolesDeUsuario.Controllers
                         return RedirectToAction("AccesoDenegado");
                     }
                 }
+                else if (vm.Docente.Activo != 1)
+                    return RedirectToAction("VerDocentes");
                 else
                     return View(vm);
             }
@@ -393,6 +397,7 @@ namespace Actividad2RolesDeUsuario.Controllers
 
             if (vm.Alumno != null)
             {
+                vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
                 if (User.IsInRole("Docente"))
                 {
                     vm.Docente = reposDocente.Get(vm.Alumno.IdMaestro);
@@ -406,6 +411,8 @@ namespace Actividad2RolesDeUsuario.Controllers
                         return RedirectToAction("AccesoDenegado");
                     }
                 }
+                else if (vm.Docente.Activo != 1)
+                    return RedirectToAction("VerDocentes");
                 else
                     return View(vm);
             }
